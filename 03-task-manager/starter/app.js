@@ -1,3 +1,4 @@
+require("./Db/Connect");
 const express = require("express");
 const app = express();
 const tasks = require("./Routes/tasks");
