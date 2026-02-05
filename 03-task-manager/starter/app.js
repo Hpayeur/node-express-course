@@ -1,8 +1,14 @@
+const dns = require("node:dns");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+const servers = dns.getServers();
+console.log("Node.js is using these DNS servers:", servers);
+
 require("./Db/Connect");
 const express = require("express");
 const app = express();
 const tasks = require("./Routes/tasks");
-
+const connectDB = require("./Db/Connect");
+require("dotenv").config();
 //Middleware
 
 app.use(express.json());
@@ -14,8 +20,17 @@ app.get("/hello", (req, res) => {
 
 app.use("/api/v1/tasks", tasks);
 const port = 3000;
+const start = async () => {
+  try {
+    console.log(process.env.MONGO_URI);
+    await connectDB(process.env.MONGO_URI);
+    app.listen(
+      port,
+      console.log(`server is listening on port http://localhost:${port}...`),
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-app.listen(
-  port,
-  console.log(`server is listening on port http://localhost:${port}...`),
-);
+start();
