@@ -8,6 +8,7 @@ const express = require("express");
 const app = express();
 const tasks = require("./Routes/tasks");
 const connectDB = require("./Db/Connect");
+const notFound = require("./Middleware/Not-found");
 //Middleware
 app.use(express.static("./public"));
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use(express.json());
 //Routes
 
 app.use("/api/v1/tasks", tasks);
+app.use(notFound);
 const port = 3000;
 const start = async () => {
   try {
