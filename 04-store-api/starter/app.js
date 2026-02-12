@@ -1,1 +1,37 @@
-console.log('04 Store API')
+const dns = require("node:dns");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+const servers = dns.getServers();
+console.log("Node.js is using these DNS servers:", servers);
+console.log("04 Store API");
+
+require("dotenv").config();
+
+//Async Errors
+const express = require("express");
+const app = express();
+const notFoundMiddleware = require("./middleware/not-found");
+const errorMiddleware = require("./middleware/error-handler");
+
+//MiddleWare
+app.use(express.json());
+
+//Routes
+app.get("/", (req, res) => {
+  res.send('<h1> Store API </h1><a href="/api/v1/products">Products Route</a>');
+});
+
+//Products Route
+app.use(notFoundMiddleware);
+app.use(errorMiddleware);
+
+const port = process.env.PORT || 3000;
+
+//ConnectDB
+const start = async () => {
+  try {
+    app.listen(port, console.log(`Server is listening to port ${port}...`));
+  } catch (error) {
+    console.log(error);
+  }
+};
+start();
