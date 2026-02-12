@@ -2,24 +2,32 @@ const dns = require("node:dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 const servers = dns.getServers();
 console.log("Node.js is using these DNS servers:", servers);
-const connectDB = require("./Db/connect");
-require("dotenv").config();
-
 const express = require("express");
-const tasks = require("./routes/tasks");
 const app = express();
-app.get("/hello", (req, res) => {
-  res.send("Task Manager App");
-});
+const tasks = require("./routes/tasks");
+const connectDB = require("./db/connect");
+require("dotenv").config();
+const notFound = require("./middleware/not-found");
+
+// middleware
+
+app.use(express.static("./public"));
 app.use(express.json());
+
+// routes
+
 app.use("/api/v1/tasks", tasks);
+
+app.use(notFound);
 
 const port = 3000;
 
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
-    app.listen(port, console.log(`Server is listening on port ${port}...`));
+    app.listen(port, () =>
+      console.log(`Server is listening on port ${port}...`),
+    );
   } catch (error) {
     console.log(error);
   }
