@@ -68,5 +68,3 @@ module.exports = {
   getAllProducts,
   getAllProductsStatic,
 };
-
-//Youtube Course: https://www.youtube.com/watch?v=qwfE7fSVaZM&t=179s Timestamp:
